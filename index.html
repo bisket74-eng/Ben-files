@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE BEN FILES // Classified</title>
+<style>
+  :root {
+    --bg: #07110d;
+    --panel: #0c1b14;
+    --panel2: #10251b;
+    --green: #7dff9b;
+    --green2: #35d46a;
+    --cream: #e9e4c9;
+    --red: #ff5f5f;
+    --yellow: #ffd86b;
+    --muted: #789081;
+    --shadow: rgba(0,0,0,.55);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 50% 10%, rgba(54, 117, 74, .18), transparent 35%),
+      linear-gradient(#07110d, #030705 70%);
+    color: var(--cream);
+    font-family: "Courier New", monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .08;
+    background-image:
+      linear-gradient(rgba(255,255,255,.2) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.2) 1px, transparent 1px);
+    background-size: 4px 4px;
+    z-index: 10;
+  }
+
+  .wrap { width: min(1100px, 92vw); margin: auto; }
+
+  header {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    position: relative;
+    padding: 40px 0;
+  }
+
+  .stars {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .stars span {
+    position: absolute; width: 2px; height: 2px; background: #c9ffd3;
+    opacity: .7; animation: blink 2s infinite alternate;
+  }
+  @keyframes blink { from {opacity:.15} to {opacity:.8} }
+
+  .terminal {
+    position: relative;
+    max-width: 850px;
+    width: 100%;
+    padding: 35px;
+    border: 1px solid rgba(125,255,155,.35);
+    background: rgba(6,18,12,.82);
+    box-shadow: 0 0 70px rgba(53,212,106,.08), inset 0 0 35px rgba(0,0,0,.45);
+  }
+
+  .classified {
+    display: inline-block;
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 5px 12px;
+    letter-spacing: 4px;
+    font-weight: bold;
+    transform: rotate(-2deg);
+    margin-bottom: 25px;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 8vw, 6.8rem);
+    line-height: .85;
+    margin: 0;
+    color: var(--green);
+    text-shadow: 0 0 20px rgba(125,255,155,.3);
+    letter-spacing: -5px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    margin: 20px 0 30px;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .boot {
+    text-align: left;
+    background: #020604;
+    border: 1px solid #1d3b29;
+    padding: 16px;
+    margin: 25px 0;
+    font-size: .85rem;
+    line-height: 1.8;
+  }
+
+  .ok { color: var(--green); }
+  .bad { color: var(--red); }
+  .warn { color: var(--yellow); }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+    color: var(--green);
+    background: #07150d;
+    border: 1px solid var(--green2);
+    padding: 13px 20px;
+    transition: .15s ease;
+  }
+  button:hover {
+    background: var(--green);
+    color: #041008;
+    box-shadow: 0 0 20px rgba(125,255,155,.2);
+    transform: translateY(-2px);
+  }
+
+  section { padding: 80px 0; }
+  .section-title {
+    font-size: 1rem;
+    color: var(--green);
+    letter-spacing: 3px;
+    border-bottom: 1px solid #21472e;
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  @media(max-width:700px){ .grid{grid-template-columns:1fr;} }
+
+  .card {
+    background: linear-gradient(145deg, rgba(16,37,27,.95), rgba(7,18,13,.95));
+    border: 1px solid #1e402b;
+    padding: 24px;
+    min-height: 180px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover { border-color: var(--green2); }
+  .card h3 { margin-top: 0; color: var(--green); }
+  .card p { color: #b5c4b7; line-height: 1.6; }
+
+  .tag {
+    position: absolute; top: 12px; right: 12px;
+    color: var(--muted); font-size: .7rem;
+  }
+
+  .stats {
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:10px;
+    margin-top:20px;
+  }
+  @media(max-width:600px){ .stats{grid-template-columns:1fr 1fr;} }
+  .stat {
+    border:1px solid #254b32;
+    padding:15px;
+    background:#07130c;
+  }
+  .stat strong { display:block; color:var(--green); font-size:1.4rem; margin-top:5px; }
+
+  .map {
+    min-height: 450px;
+    position: relative;
+    border: 1px solid #234a31;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 30% 20%, #173b24 0 8%, transparent 9%),
+      radial-gradient(ellipse at 75% 65%, #173b24 0 10%, transparent 11%),
+      linear-gradient(135deg,#0a2115,#06100b);
+  }
+  .map::before {
+    content:"";
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(35deg, transparent 0 28px, rgba(70,130,80,.09) 29px 31px),
+      repeating-linear-gradient(-55deg, transparent 0 36px, rgba(70,130,80,.07) 37px 39px);
+  }
+  .marker {
+    position:absolute;
+    border-radius:50%;
+    width:18px; height:18px;
+    background:var(--red);
+    box-shadow:0 0 0 5px rgba(255,95,95,.15), 0 0 20px rgba(255,95,95,.4);
+  }
+  .marker button {
+    position:absolute;
+    left:20px; top:-10px;
+    white-space:nowrap;
+    padding:7px 9px;
+    font-size:.72rem;
+  }
+
+  .refrigerator {
+    max-width: 430px;
+    margin: 20px auto;
+    border: 3px solid #7d817b;
+    background: linear-gradient(90deg,#72766f,#c7c9c2,#777b74);
+    padding: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.5);
+  }
+  .fridge-door {
+    height: 430px;
+    background: linear-gradient(90deg,#969b93,#d8dad4,#9da19a);
+    border: 2px solid #676b65;
+    position:relative;
+    padding:30px 22px;
+    color:#20241f;
+    box-shadow: inset 0 0 30px rgba(255,255,255,.35);
+  }
+  .handle {
+    position:absolute; right:15px; top:70px; height:180px; width:9px;
+    background:#4f534e; border-radius:8px;
+  }
+  .fridge-note {
+    background:#f4e78a;
+    padding:12px;
+    transform:rotate(-3deg);
+    width:160px;
+    font-family:"Comic Sans MS", cursive;
+    box-shadow:3px 5px 8px rgba(0,0,0,.3);
+  }
+  .fridge-inside {
+    display:none;
+    margin-top:20px;
+    background:#f3f5ef;
+    border:4px solid #c2c7bf;
+    padding:25px;
+    color:#151915;
+  }
+  .fridge-inside.show { display:block; }
+  .mystery { cursor:pointer; color:#a20e0e; font-weight:bold; }
+
+  .quiz {
+    background:#050c07;
+    border:1px solid #234a31;
+    padding:25px;
+  }
+  .answers { display:grid; gap:10px; margin-top:20px; }
+  .answer { text-align:left; width:100%; }
+
+  .achievement {
+    text-align:center;
+    padding:45px 25px;
+    border:1px solid var(--green2);
+    background:radial-gradient(circle,rgba(53,212,106,.12),transparent 65%);
+  }
+  .achievement .trophy { font-size:4rem; }
+
+  footer {
+    text-align:center;
+    padding:70px 0 100px;
+    color:#6f8575;
+  }
+
+  .secret {
+    color: transparent;
+    user-select:none;
+    cursor:pointer;
+  }
+  .secret:hover { color:var(--green); }
+
+  #toast {
+    position:fixed; left:50%; bottom:25px; transform:translateX(-50%) translateY(100px);
+    background:#06150b; border:1px solid var(--green2); color:var(--green);
+    padding:15px 20px; z-index:100; transition:.25s;
+    box-shadow:0 10px 40px #000;
+    max-width:90vw; text-align:center;
+  }
+  #toast.show { transform:translateX(-50%) translateY(0); }
+
+  .glitch { animation: glitch .18s 3; }
+  @keyframes glitch {
+    0%{transform:translate(0)}
+    25%{transform:translate(5px,-2px)}
+    50%{transform:translate(-4px,2px)}
+    75%{transform:translate(2px,1px)}
+    100%{transform:translate(0)}
+  }
+
+  .camera-screen {
+    height: 300px; position:relative; overflow:hidden; border:2px solid #253f2d;
+    background: radial-gradient(circle at 50% 45%, #1d3d28, #020604 65%);
+    display:grid; place-items:center; filter:contrast(1.15);
+  }
+  .camera-screen::before {
+    content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 4px);
+    pointer-events:none;
+  }
+  .rec { position:absolute;left:15px;top:12px;color:#ff5757;font-weight:bold; }
+  .timestamp { position:absolute;right:15px;top:12px;color:#b5c4b7; }
+  .camera-caption { position:absolute;bottom:15px;color:#7dff9b;letter-spacing:2px;font-size:.75rem; }
+  .silhouette { font-size:10rem; opacity:.25; filter:blur(2px); transition:.3s; }
+  .camera-screen.active .silhouette { transform:scale(1.3); opacity:.8; }
+
+  .game { border:1px solid #234a31; background:#050c07; padding:14px; }
+  .game-hud { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; color:var(--green); padding:10px; border:1px solid #21472e; }
+  .game-board { position:relative; height:430px; margin-top:12px; overflow:hidden; background:
+    radial-gradient(circle at 20% 30%,#183d25 0 4%,transparent 5%),
+    radial-gradient(circle at 70% 70%,#153720 0 5%,transparent 6%),
+    linear-gradient(135deg,#07170c,#0b2414);
+    outline:none; }
+  .forest,.item,.clue,.bigfoot,.player { position:absolute; user-select:none; }
+  .forest { font-size:42px; opacity:.7; }
+  .f1{left:8%;top:12%}.f2{left:82%;top:15%}.f3{left:12%;top:75%}.f4{left:76%;top:76%}.f5{left:45%;top:10%}.f6{left:52%;top:82%}
+  .player { left:48%;top:48%;font-size:34px;z-index:5; transition:transform .08s; }
+  .item { font-size:28px; cursor:pointer; animation:bob 1.4s infinite alternate; }
+  .i1{left:20%;top:35%}.i2{left:72%;top:40%}.i3{left:35%;top:72%}
+  .clue { width:30px;height:30px;border:1px solid var(--yellow);color:var(--yellow);display:grid;place-items:center;border-radius:50%;cursor:pointer;font-weight:bold; }
+  .c1{left:28%;top:20%}.c2{left:62%;top:67%}.c3{left:84%;top:48%}
+  .bigfoot { right:18%;top:20%;font-size:58px;z-index:4;transition:.25s; }
+  .game-hint { position:absolute;left:10px;bottom:10px;color:#5e7c68;font-size:.7rem;line-height:1.5; }
+  @keyframes bob {to{transform:translateY(-6px)}}
+
+  .terminal-box { background:#010301;border:1px solid #31563b;padding:18px;min-height:250px;box-shadow:inset 0 0 30px rgba(53,212,106,.05); }
+  #dosOutput { min-height:180px;line-height:1.7;color:#86d99a;white-space:pre-wrap; }
+  .terminal-input { display:flex;gap:8px;color:var(--green);border-top:1px solid #1d3925;padding-top:12px; }
+  .terminal-input input { flex:1;background:transparent;border:0;outline:0;color:var(--green);font:inherit; }
+
+  .puzzle { background:#07130c;border:1px solid #2d5737;padding:30px;text-align:center; }
+  .clue-slots { display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:25px 0; }
+  .clue-slots button { min-width:150px;font-size:1.2rem; }
+  .puzzle.solved { border-color:var(--yellow);box-shadow:0 0 35px rgba(255,216,107,.12); }
+
+  @media(max-width:650px){
+    .camera-screen{height:240px}.game-board{height:360px}.game-hud{font-size:.75rem}
+    .clue-slots button{min-width:120px}
+  }
+
+</style>
+</head>
+
+<body>
+<div id="toast"></div>
+
+<header>
+  <div class="stars" id="stars"></div>
+  <div class="wrap">
+    <div class="terminal">
+      <div class="classified">TOP SECRET // EYES ONLY</div>
+      <h1>THE BEN<br>FILES</h1>
+      <div class="subtitle">
+        A highly questionable investigation into one man,<br>
+        one Sasquatch, one electric bicycle,<br>
+        and an alarming refrigerator situation.
+      </div>
+
+      <div class="boot">
+        <div>&gt; INITIALIZING BEN DATABASE...</div>
+        <div>&gt; SUBJECT IDENTIFIED: <span class="ok">BEN</span></div>
+        <div>&gt; RELATIONSHIP: <span class="warn">SON-IN-LAW ADVISEMENT</span></div>
+        <div>&gt; BIGFOOT PROXIMITY: <span class="bad">CONCERNING</span></div>
+        <div>&gt; DAD MODE: <span class="ok">IMMINENT</span></div>
+        <div>&gt; REFRIGERATOR STATUS: <span class="bad">CLASSIFIED</span></div>
+      </div>
+
+      <button onclick="startInvestigation()">[ BEGIN INVESTIGATION ]</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="profile">
+    <div class="section-title">// SUBJECT PROFILE</div>
+    <div class="grid">
+      <div class="card">
+        <span class="tag">FILE 001</span>
+        <h3>BEN: THE MAN</h3>
+        <p>Quirky. Big-hearted. Video-game enthusiast. Family. Professional goofball. Suspected Sasquatch associate.</p>
+      </div>
+      <div class="card">
+        <span class="tag">FILE 002</span>
+        <h3>RELATIONSHIP STATUS</h3>
+        <p><strong class="warn">SON-IN-LAW ADVISEMENT</strong></p>
+        <p>Not technically the simplest family tree branch. Definitely family. Investigation classified as “we've lived together, so we're in too deep now.”</p>
+      </div>
+      <div class="card">
+        <span class="tag">FILE 003</span>
+        <h3>KNOWN EQUIPMENT</h3>
+        <p>Electric bicycle. Video-game hardware. Assorted electronics. Snacks. Unknown number of browser tabs.</p>
+      </div>
+      <div class="card">
+        <span class="tag">FILE 004</span>
+        <h3>DAD MODE</h3>
+        <p>Two tiny humans are incoming. Current estimate: 99% dad potential, 1% chance of remembering where he put anything.</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat">GOOFBALL<strong>100</strong></div>
+      <div class="stat">DAD POTENTIAL<strong>99</strong></div>
+      <div class="stat">HEART<strong>LEGENDARY</strong></div>
+      <div class="stat">BIGFOOT KNOWLEDGE<strong>87</strong></div>
+      <div class="stat">E-BIKE SPEED<strong>???</strong></div>
+      <div class="stat">OBJECT LOCATION<strong>CRITICAL FAIL</strong></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// FIELD INVESTIGATION MAP</div>
+    <div class="map">
+      <div class="marker" style="left:18%;top:28%"><button onclick="reveal('footprints')">FOOTPRINTS</button></div>
+      <div class="marker" style="left:68%;top:22%"><button onclick="reveal('bike')">BIKE TRACKS</button></div>
+      <div class="marker" style="left:45%;top:68%"><button onclick="reveal('prophecy')">THE PROPHECY</button></div>
+      <div class="marker" style="left:78%;top:76%"><button onclick="reveal('fridge')">⚠ ???</button></div>
+    </div>
+    <p id="mapMessage" class="subtitle"></p>
+  </section>
+
+  <section>
+    <div class="section-title">// SECURITY FOOTAGE // CAM 04</div>
+    <div class="card camera">
+      <div class="camera-screen" id="cameraScreen">
+        <div class="rec">● REC</div>
+        <div class="timestamp">03:17:42 AM</div>
+        <div class="silhouette" id="silhouette">♟</div>
+        <div class="camera-caption">MOTION DETECTED // UNKNOWN SUBJECT</div>
+      </div>
+      <div style="margin-top:15px">
+        <button onclick="advanceCamera()">▶ REVIEW FOOTAGE</button>
+        <button onclick="cameraJump()">SKIP TO 03:19:00</button>
+      </div>
+      <p id="cameraResult"></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// PROVE YOU ARE NOT BIGFOOT</div>
+    <div class="quiz">
+      <h2>SECURITY CHECKPOINT</h2>
+      <p>You hear a noise in the forest. What do you do?</p>
+      <div class="answers">
+        <button class="answer" onclick="quizAnswer('investigate')">A. Investigate the noise.</button>
+        <button class="answer" onclick="quizAnswer('run')">B. Run away immediately.</button>
+        <button class="answer" onclick="quizAnswer('bike')">C. Get on the e-bike.</button>
+        <button class="answer" onclick="quizAnswer('fridge')">D. Check the bottom of the back of the fridge.</button>
+      </div>
+      <p id="quizResult"></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// BENQUEST™ // MINI-GAME</div>
+    <div class="game">
+      <div class="game-hud">
+        <span>BENQUEST™</span>
+        <span>HP: <b id="hp">100</b></span>
+        <span>SNACKS: <b id="snacks">0</b></span>
+        <span>CLUES: <b id="clues">0</b>/3</span>
+      </div>
+      <div id="gameBoard" class="game-board" tabindex="0">
+        <div id="player" class="player">🚲</div>
+        <div class="forest f1">🌲</div><div class="forest f2">🌲</div><div class="forest f3">🌲</div>
+        <div class="forest f4">🌲</div><div class="forest f5">🌲</div><div class="forest f6">🌲</div>
+        <div class="item i1" onclick="collectItem(this)">🥨</div>
+        <div class="item i2" onclick="collectItem(this)">🔋</div>
+        <div class="item i3" onclick="collectItem(this)">🧲</div>
+        <div class="clue c1" onclick="collectClue(this)">?</div>
+        <div class="clue c2" onclick="collectClue(this)">?</div>
+        <div class="clue c3" onclick="collectClue(this)">?</div>
+        <div class="bigfoot" id="bigfoot">🦶</div>
+        <div class="game-hint">ARROW KEYS / WASD TO MOVE<br>Collect 3 clues. Avoid Bigfoot.</div>
+      </div>
+      <p id="gameMessage">Press the game board and start riding.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// THE REFRIGERATOR INCIDENT</div>
+    <div class="refrigerator">
+      <div class="fridge-door">
+        <div class="fridge-note">MILK<br><br>EGGS<br><br>DON'T FORGET<br>THE THING</div>
+        <div class="handle"></div>
+        <p style="position:absolute;bottom:20px;left:20px;font-weight:bold;">HOUSEHOLD APPLIANCE // NORMAL</p>
+        <button style="position:absolute;bottom:55px;left:20px" onclick="openFridge()">OPEN FRIDGE</button>
+        <div id="fridgeInside" class="fridge-inside">
+          <p>🥛 Milk</p><p>🧀 Cheese</p><p>🥡 Something from Tuesday</p><p>🧲 One mysterious magnet</p>
+          <p class="mystery" onclick="secretFridge()">❓ SOMETHING ELSE</p>
+          <div id="fridgeSecret"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// CLASSIFIED DOS TERMINAL</div>
+    <div class="terminal-box">
+      <div id="dosOutput">
+        <div>BEN_OS v4.20</div>
+        <div>Type <span class="ok">HELP</span> for available commands.</div>
+      </div>
+      <div class="terminal-input">
+        <span>&gt;</span><input id="dosInput" autocomplete="off" spellcheck="false" aria-label="DOS command">
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// THE PROPHECY OF THE TWO</div>
+    <div class="card">
+      <h3>THE TWO SHALL ARRIVE</h3>
+      <p>Ancient Sasquatch records describe a future event involving <strong>two tiny humans</strong>, two bottles, two voices, and one extremely underprepared father.</p>
+      <p>Their arrival will fundamentally alter the household.</p>
+      <p class="warn">Three fragments of the prophecy are hidden somewhere on this page.</p>
+      <button onclick="prophecy()">REVEAL WHAT YOU HAVE EARNED</button>
+      <p id="prophecyText"></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// MASTER PUZZLE</div>
+    <div class="puzzle">
+      <h2>THE REFRIGERATOR PROTOCOL</h2>
+      <p>You've found the three clues. Assemble them in the correct order.</p>
+      <div class="clue-slots">
+        <button onclick="cycleSlot(0)" id="slot0">[ ? ]</button>
+        <button onclick="cycleSlot(1)" id="slot1">[ ? ]</button>
+        <button onclick="cycleSlot(2)" id="slot2">[ ? ]</button>
+      </div>
+      <p class="subtitle">Each button cycles through possible words. You are looking for the location everyone somehow already knows.</p>
+      <button onclick="solveMaster()">SUBMIT LOCATION</button>
+      <p id="masterResult"></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title">// FINAL ENCOUNTER</div>
+    <div class="achievement">
+      <div class="trophy">🏆</div>
+      <h2>ACHIEVEMENT: LEGENDARY STATUS</h2>
+      <p>After extensive investigation, several questionable field reports, and an amount of refrigerator-based evidence that should concern everyone involved...</p>
+      <button onclick="finale()">CLOSE THE CASE</button>
+      <div id="finaleText"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>THE BEN FILES // CLASSIFIED // 2026</p>
+  <p>For the record: you're family, you absolute goofball. ❤️</p>
+  <p class="secret" onclick="secretClick()">there is definitely nothing hidden here</p>
+</footer>
+
+<script>
+  const toast = document.getElementById("toast");
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2800);
+  }
+  function startInvestigation() {
+    document.getElementById("profile").scrollIntoView({behavior:"smooth"});
+    showToast("INVESTIGATION STARTED. This was a terrible idea.");
+  }
+  function reveal(type) {
+    const messages = {
+      footprints:"Three enormous footprints. One normal footprint. One suspiciously Ben-shaped footprint. Evidence inconclusive.",
+      bike:"Fresh e-bike tracks detected. Sasquatch apparently tried to keep up. Sasquatch lost.",
+      prophecy:"THE TWO SHALL ARRIVE. THE HOUSE WILL NEVER BE QUIET AGAIN. Also: check the fridge.",
+      fridge:"⚠ REFRIGERATOR ANOMALY DETECTED. You already know where this is going."
+    };
+    document.getElementById("mapMessage").textContent = messages[type];
+    showToast(messages[type]);
+  }
+
+  const quizMessages = {
+    investigate:"Suspicious. Bigfoot would investigate too.",
+    run:"Cowardly. Respectable, but suspicious.",
+    bike:"Fast. Efficient. Extremely Ben.",
+    fridge:"CORRECT. Somehow this is the only scientifically defensible answer."
+  };
+  function quizAnswer(a) {
+    document.getElementById("quizResult").innerHTML =
+      '<span class="warn">' + quizMessages[a] + '</span><br><span class="ok">Final determination: check the bottom of the back of the fridge.</span>';
+    document.body.classList.add("glitch");
+    setTimeout(() => document.body.classList.remove("glitch"), 600);
+  }
+
+  // Camera footage
+  let cameraStep = 0;
+  function advanceCamera() {
+    cameraStep++;
+    const screen = document.getElementById("cameraScreen");
+    const caption = document.getElementById("cameraResult");
+    screen.classList.add("active");
+    if (cameraStep === 1) {
+      caption.textContent = "03:18:02 — Large figure detected. Subject appears to be carrying a snack.";
+    } else if (cameraStep === 2) {
+      caption.textContent = "03:18:41 — Subject approaches refrigerator. This is becoming relevant.";
+    } else {
+      caption.innerHTML = '<span class="bad">03:19:00 — FOOTAGE CLASSIFIED.</span> Someone said “where’s that?” and the recording ends.';
+      showToast("CAMERA ARCHIVE CORRUPTED BY REFRIGERATOR ACTIVITY.");
+    }
+  }
+  function cameraJump() {
+    document.getElementById("cameraResult").innerHTML =
+      '<span class="ok">03:19:00 — SUBJECT LOCATED.</span> Location: bottom. Back. Refrigerator.';
+    showToast("YOU SKIPPED DIRECTLY TO THE IMPORTANT PART.");
+  }
+
+  // Refrigerator
+  function openFridge() {
+    document.getElementById("fridgeInside").classList.toggle("show");
+    showToast("CAUTION: YOU ARE ENTERING THE REFRIGERATOR.");
+  }
+  function secretFridge() {
+    document.getElementById("fridgeSecret").innerHTML =
+      '<h3>YOU FOUND IT.</h3><p>IN THE BOTTOM OF THE BACK OF THE FRIDGE.</p><p>Obviously.</p>';
+    showToast("SECRET FOUND. HOW DID YOU KNOW?");
+    foundClues.add("fridge");
+    updateClues();
+  }
+
+  // Mini game
+  const player = document.getElementById("player");
+  const board = document.getElementById("gameBoard");
+  let px=48, py=48, hp=100, snacks=0;
+  const foundClues = new Set();
+  function movePlayer(dx,dy) {
+    px=Math.max(3,Math.min(93,px+dx)); py=Math.max(5,Math.min(88,py+dy));
+    player.style.left=px+"%"; player.style.top=py+"%";
+    const bf=document.getElementById("bigfoot");
+    const bx=parseFloat(bf.style.left||82), by=parseFloat(bf.style.top||20);
+    if(Math.abs(px-bx)<7 && Math.abs(py-by)<8){
+      hp=Math.max(0,hp-10); document.getElementById("hp").textContent=hp;
+      bf.style.transform="translateX(18px)";
+      document.getElementById("gameMessage").textContent="BIGFOOT BUMP! You lost 10 HP. He seems more confused than angry.";
+      setTimeout(()=>bf.style.transform="",250);
+    }
+  }
+  document.addEventListener("keydown",e=>{
+    const k=e.key.toLowerCase();
+    if(["arrowup","arrowdown","arrowleft","arrowright","w","a","s","d"].includes(k)) {
+      e.preventDefault();
+      if(k==="arrowup"||k==="w")movePlayer(0,-3);
+      if(k==="arrowdown"||k==="s")movePlayer(0,3);
+      if(k==="arrowleft"||k==="a")movePlayer(-3,0);
+      if(k==="arrowright"||k==="d")movePlayer(3,0);
+    }
+  });
+  function collectItem(el){
+    el.style.display="none"; snacks++; document.getElementById("snacks").textContent=snacks;
+    showToast("ITEM ACQUIRED. Probably important. Probably.");
+  }
+  function collectClue(el){
+    el.style.display="none";
+    const id=el.classList.contains("c1")?"bottom":el.classList.contains("c2")?"back":"fridge";
+    foundClues.add(id); updateClues();
+    document.getElementById("gameMessage").textContent="CLUE ACQUIRED: " + id.toUpperCase();
+  }
+  function updateClues(){
+    const n=[...foundClues].filter(x=>["bottom","back","fridge"].includes(x)).length;
+    document.getElementById("clues").textContent=Math.min(n,3);
+  }
+
+  // DOS terminal
+  const dosOutput=document.getElementById("dosOutput");
+  const dosInput=document.getElementById("dosInput");
+  const commands={
+    HELP:"AVAILABLE COMMANDS: HELP, WHOAMI, BIGFOOT, BEN, DAD, FRIDGE, MAP, INVENTORY, KONAMI",
+    WHOAMI:"USER: BEN\\nSTATUS: FAMILY\\nCLASS: LEGENDARY GOOFBALL",
+    BIGFOOT:"BIGFOOT STATUS: PROBABLY FINE.\\nCURRENT LOCATION: CLASSIFIED.",
+    BEN:"BEN.EXE IS RUNNING. THERE ARE TOO MANY TABS OPEN.",
+    DAD:"DAD MODE: IMMINENT.\\nTWIN GIRLS: LOADING... 99%",
+    FRIDGE:"ACCESS DENIED. TRY LOOKING IN THE BOTTOM OF THE BACK OF THE FRIDGE.",
+    MAP:"MAP STATUS: 4 ANOMALIES DETECTED. ONE IS COLD.",
+    INVENTORY:"E-BIKE\\nSNACK\\nMYSTERIOUS MAGNET\\nQUESTIONABLE DECISIONS",
+    KONAMI:"↑ ↑ ↓ ↓ ← → ← → B A\\nCHEAT CODE ACCEPTED. +999 FRIENDSHIP."
+  };
+  dosInput.addEventListener("keydown",e=>{
+    if(e.key!=="Enter")return;
+    const cmd=dosInput.value.trim().toUpperCase(); dosInput.value="";
+    dosOutput.innerHTML += "\\n&gt; "+cmd+"\\n"+(commands[cmd]||"COMMAND NOT FOUND. Try FRIDGE.") .replace(/\\n/g,"<br>");
+    dosOutput.scrollTop=dosOutput.scrollHeight;
+    if(cmd==="FRIDGE")showToast("TERMINAL CONFIRMS: THIS IS GETTING OUT OF HAND.");
+  });
+
+  // Prophecy
+  function prophecy(){
+    const earned=foundClues.has("bottom")&&foundClues.has("back")&&foundClues.has("fridge");
+    document.getElementById("prophecyText").innerHTML=earned
+      ? '<strong class="ok">“...in the bottom of the back of the fridge.”</strong><br><br>You have collected the three fragments. The ancient prophecy recognizes your questionable competence.'
+      : 'The prophecy is incomplete. Find three hidden words: <strong>BOTTOM</strong>, <strong>BACK</strong>, and <strong>FRIDGE</strong>.';
+  }
+
+  // Master puzzle
+  const choices=[["BOTTOM","TOP","SIDE"],["BACK","FRONT","LEFT"],["FRIDGE","OVEN","FREEZER"]];
+  const indices=[0,0,0];
+  function cycleSlot(i){
+    indices[i]=(indices[i]+1)%choices[i].length;
+    document.getElementById("slot"+i).textContent="[ "+choices[i][indices[i]]+" ]";
+  }
+  function solveMaster(){
+    const correct=indices.every((v,i)=>v===0);
+    const out=document.getElementById("masterResult");
+    if(correct){
+      out.innerHTML='<span class="ok">LOCATION CONFIRMED.</span><br><strong>IN THE BOTTOM OF THE BACK OF THE FRIDGE.</strong>';
+      document.querySelector(".puzzle").classList.add("solved");
+      showToast("MASTER PUZZLE SOLVED. THIS SHOULD NOT HAVE BEEN THIS EASY.");
+      foundClues.add("bottom");foundClues.add("back");foundClues.add("fridge");updateClues();
+    } else {
+      out.innerHTML='<span class="bad">NOPE.</span> That location sounds like a different household appliance.';
+      showToast("WRONG APPLIANCE.");
+    }
+  }
+
+  function finale(){
+    document.getElementById("finaleText").innerHTML =
+      '<h3 style="color:var(--green);font-size:2rem">CASE CLOSED.</h3>' +
+      '<p>The legendary Sasquatch has been located.</p>' +
+      '<p><strong>IN THE BOTTOM OF THE BACK OF THE FRIDGE.</strong></p>' +
+      '<p style="font-size:1.2rem;margin-top:30px">Ben — thanks for being family, you absolute goofball. ❤️</p>' +
+      '<p class="warn">Achievement unlocked: SON-IN-LAW ADVISEMENT // MAXIMUM LEVEL</p>';
+    showToast("ACHIEVEMENT UNLOCKED: LEGENDARY FAMILY MEMBER.");
+  }
+
+  function secretClick(){
+    showToast("NICE TRY. THERE WAS SOMETHING HIDDEN HERE.");
+    document.querySelector("footer").classList.add("glitch");
+  }
+
+  // Stars
+  const stars=document.getElementById("stars");
+  for(let i=0;i<100;i++){
+    const s=document.createElement("span");
+    s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*100+"%";
+    s.style.animationDelay=Math.random()*2+"s"; stars.appendChild(s);
+  }
+
+  // Konami code
+  const konami=["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  let kc=0;
+  document.addEventListener("keydown",e=>{
+    if(e.key===konami[kc]){kc++; if(kc===konami.length){kc=0; showToast("CHEAT CODE ACCEPTED. BEN +999 FRIENDSHIP."); document.body.classList.add("glitch"); setTimeout(()=>document.body.classList.remove("glitch"),700);}}
+    else kc=0;
+  });
+
+  // Type FRIDGE anywhere
+  let keys="";
+  document.addEventListener("keydown",e=>{
+    if(document.activeElement===dosInput)return;
+    keys=(keys+e.key.toUpperCase()).slice(-6);
+    if(keys==="FRIDGE"){showToast("KEYBOARD SECRET: IN THE BOTTOM OF THE BACK OF THE FRIDGE.");document.body.classList.add("glitch");setTimeout(()=>document.body.classList.remove("glitch"),600);}
+  });
+</script>
+</body>
+</html>
